@@ -33,6 +33,7 @@ receiveChar:	li $v0, 12
 		li $t0, 1
 		la $t1, Buffer
 		
+		##load each char and compare
 searchChar:	lb $t2, ($t1)
 		beq $t2, '\0', Fail
 		beq $t2, '\n', Fail
@@ -63,6 +64,5 @@ Fail: 		la $a0, NotFoundString
 				
 exit:		li $v0, 10
 		syscall
-		
 		
 		
