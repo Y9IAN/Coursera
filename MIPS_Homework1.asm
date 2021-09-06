@@ -15,9 +15,11 @@ Digit:		.asciiz	"zero", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", 
 numOffset:	.word	0,5,11,18,24,31,37,43,51,58
 
 		.text
-main:		li $v0, 12
+main:		li $v0, 12			##read input char
 		syscall
 		move $t0, $v0
+		
+		##Judge the range of character and go to corresponding function
 		beq $t0, '?', exit
 		blt $t0, '0', Unknown
 		ble $t0, '9', printNum
@@ -27,6 +29,7 @@ main:		li $v0, 12
 		ble $t0, 'z', printLC
 		j Unknown
 				
+		##Unknown character, print *
 Unknown:	li $a0, '*'
 		li $v0, 11
 		syscall
@@ -38,7 +41,7 @@ printUC:	sub $t1, $t0, 'A'		##Get digit number
 		add $t3, $t2, $t1
 		lw $s1, ($t3)			##Save offset
 		la $s2, UpperCase		##Save base address
-		add $a0, $s2, $s1		##Get address
+		add $a0, $s2, $s1		##Get physical address
 		li $v0,4
 		syscall
 		j endLine		
@@ -49,7 +52,7 @@ printLC:	sub $t1, $t0, 'a'		##Get digit number
 		add $t3, $t2, $t1
 		lw $s1, ($t3)			##Save offset
 		la $s2, LowerCase		##Save base address
-		add $a0, $s2, $s1		##Get address
+		add $a0, $s2, $s1		##Get physicaladdress
 		li $v0,4
 		syscall
 		j endLine	
@@ -61,11 +64,12 @@ printNum:
 		add $t3, $t2, $t1
 		lw $s1, ($t3)			##Save offset
 		la $s2, Digit			##Save base address
-		add $a0, $s2, $s1		##Get address
+		add $a0, $s2, $s1		##Get physical address
 		li $v0,4
 		syscall
 		j endLine
 		
+		##Print new line
 endLine:	li $a0, '\n'
 		li $v0, 11
 		syscall
@@ -75,4 +79,3 @@ exit:		li $v0, 10
 		syscall
 		
 
-		
